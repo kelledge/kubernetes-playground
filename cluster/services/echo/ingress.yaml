@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: echomap
+spec:
+  rules:
+  - host: foo.bar.com
+    http:
+      paths:
+      - path: /echo
+        backend:
+          serviceName: echo
+          servicePort: 80
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: echomap-auth
+  annotations:
+    ingress.kubernetes.io/auth-url: "http://10.0.0.141"
+    ingress.kubernetes.io/auth-method: "POST"
+    ingress.kubernetes.io/auth-send-body: "true"
+spec:
+  rules:
+  - host: foo.bar.com
+    http:
+      paths:
+      - path: /auth/echo
+        backend:
+          serviceName: echo
+          servicePort: 80
+

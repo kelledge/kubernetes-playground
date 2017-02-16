@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: auth-url-basic
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: auth-url-basic
+    spec:
+      containers:
+      - name: auth-url-basic
+        image: auth-url-basic:8
+        imagePullPolicy: Never
+        env:
+        - name: REALM
+          value: "Protected Resource"
+        - name: HTPASSWD_PATH
+          value: "/etc/auth/htpasswd"
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: config-volume
+          mountPath: /etc/auth
+      volumes:
+      - name: config-volume
+        configMap:
+          name: credentials-3
+          items:
+          - key: htpasswd
+            path: htpasswd
